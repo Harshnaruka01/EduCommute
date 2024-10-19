@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+// import { Link } from 'react-router-dom';
 
 
 const SaveRoute = ({ routePoints }) => {
@@ -24,11 +24,10 @@ const SaveRoute = ({ routePoints }) => {
   return (
     <>
     
-    <Link to='/institute/interface'>
+ 
                 <div className="add-vehicle-submit-btn-container" onClick={handleSave} style={{display:'flex',justifyContent:'right', marginRight:'30px'}}>
                         <input type="submit" value="Register" className="add-vehicle-submit-btn" />
                 </div>
-                </Link>
     <div>
 
     </div>

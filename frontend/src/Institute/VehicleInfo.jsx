@@ -8,8 +8,8 @@ const AddVehicleInfo = () => {
     const navigate = useNavigate(); // Initialize navigate
     const [routePoints, setRoutePoints] = useState([]);
     const [formData, setFormData] = useState({
-        vehicleName: "", // Updated to match schema
-        vehicleType: "Bus", // Updated to match schema expectation (lowercase 'bus')
+        vehicleName: "",
+        vehicleType: "bus", // Ensure it matches your schema
         vehicleNumber: "",
         driverName: "",
         email: "",
@@ -49,12 +49,12 @@ const AddVehicleInfo = () => {
                 body: JSON.stringify(combinedData),
             });
 
-            console.log("Form Data before submission:", formData);
-            console.log("Route Points before submission:", routePoints);
-
             const result = await response.json();
 
             if (response.ok) {
+                // Save route points to local storage after successful registration
+                localStorage.setItem('driverRoutes', JSON.stringify(routePoints)); 
+                console.log("Saved route points to local storage:", routePoints);
                 alert("Driver registered successfully!");
                 navigate('/institute/interface'); // Navigate to the desired route
             } else {
@@ -71,7 +71,9 @@ const AddVehicleInfo = () => {
                 <div className="add-vehicle-container">
                     <h1 className="add-vehicle-title">Add Vehicle Information</h1>
                     <form className="add-vehicle-form" onSubmit={handleFormSubmit}>
+                        {/* Your form inputs remain the same */}
                         <div className="add-vehicle-section">
+                            {/* Vehicle Name, Type, and Number */}
                             <div className="add-vehicle-group">
                                 <label htmlFor="vehicleName" className="add-vehicle-label">Vehicle Name</label>
                                 <input
@@ -113,6 +115,7 @@ const AddVehicleInfo = () => {
                         </div>
 
                         <div className="add-vehicle-section">
+                            {/* Driver Name, Email, Password, Contact Number */}
                             <div className="add-vehicle-group">
                                 <label htmlFor="driverName" className="add-vehicle-label">Driver Name</label>
                                 <input
