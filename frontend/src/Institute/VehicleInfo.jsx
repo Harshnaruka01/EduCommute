@@ -175,7 +175,7 @@ const AddVehicleInfo = () => {
                             </div>
                         </div>
                         <div className="submit-btn-container">
-                            <Button variant="contained" type="submit">
+                            <Button variant="contained" type="submit" style={{position:'absolute',right:"40px", marginTop:"560px"}}>
                                 Register
                             </Button>
                         </div>

@@ -180,7 +180,7 @@ export default function SearchBox(props) {
         </Button>
 
         <div className="submit-btn-container" style={{position:'absolute',right:'10px',marginTop:'630px'}}>
-        <SaveRoute routePoints={[startingPoint, ...stops, endPoint]} /> {/* Pass route points here */}
+        {/* <SaveRoute routePoints={[startingPoint, ...stops, endPoint]} /> Pass route points here */}
       </div>
       </div>
 

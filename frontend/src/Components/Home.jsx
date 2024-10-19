@@ -8,8 +8,7 @@ function Home() {
     </div> 
     <div className='RegisterPage'>
     <RegisterPage/>
-    </div>
-    
+    </div>    
     </>
   )
 }
