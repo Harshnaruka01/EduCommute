@@ -12,12 +12,11 @@ router.post('/register/Student', [
   // Validation middleware
   body('email', 'Enter a valid Email Id').isEmail(),
   body('name', 'Name must be at least 2 characters long').isLength({ min: 2 }),
-  body('CollegeName', 'College name is required').not().isEmpty(),
+  body('CollegeName', 'College name is required').not().isEmpty(),  // Validating CollegeName
   body('password', 'Password must be at least 6 characters long').isLength({ min: 6 }),
   body('confirmPassword', 'Confirm password is required').exists(),
   body('contactNumber', 'Enter a valid 10-digit contact number').isLength({ min: 10, max: 10 }).isNumeric(),
 ], async (req, res) => {
-  // Check for validation errors
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
@@ -30,17 +29,14 @@ router.post('/register/Student', [
   }
 
   try {
-    // Check if the email is already registered
     let existingStudent = await Student.findOne({ email });
     if (existingStudent) {
       return res.status(400).json({ success: false, message: 'Email id already exists' });
     }
 
-    // Generate salt and hash the password
     const salt = await bcrypt.genSalt(10);
     let securePassword = await bcrypt.hash(password, salt);
 
-    // Create a new Student entry
     const newStudent = new Student({
       name,
       email,
@@ -49,7 +45,6 @@ router.post('/register/Student', [
       CollegeName 
     });
 
-    // Saving the Student data into the database
     await newStudent.save();
 
     res.status(201).json({ success: true, message: 'Student registered successfully!' });
@@ -59,8 +54,7 @@ router.post('/register/Student', [
   }
 });
 
-
-
+module.exports = router;
 
 
 

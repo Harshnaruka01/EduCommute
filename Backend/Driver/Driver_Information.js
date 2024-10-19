@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 
+// Define the Stop schema
 const StopSchema = new mongoose.Schema({
   lat: {
     type: String, 
@@ -16,6 +17,7 @@ const StopSchema = new mongoose.Schema({
   }
 });
 
+// Define the Route schema
 const RouteSchema = new mongoose.Schema({
   stops: {
     type: [StopSchema], 
@@ -27,23 +29,23 @@ const RouteSchema = new mongoose.Schema({
   }
 });
 
+// Define the Driver schema
 const DriverSchema = new mongoose.Schema({
-  VehicleName: {
+  vehicleName: {  // Changed to camelCase for consistency
     type: String,
     required: true,
     trim: true
   },
-  VehicleNumber: {
+  vehicleNumber: {  // Changed to camelCase for consistency
     type: String,
     required: true,
     trim: true
   },
   vehicleType: {
     type: String,
-    enum: ['bus', 'van'], 
-    required: true
+    required: false
   },
-  DriverName: {
+  driverName: {  // Changed to camelCase for consistency
     type: String,
     required: true,
     trim: true
@@ -52,9 +54,7 @@ const DriverSchema = new mongoose.Schema({
     type: String,
     required: true,
     validate: {
-      validator: function(v) {
-        return /\d{10}/.test(v); //10 digit number
-      },
+      validator: (v) => /\d{10}/.test(v), // 10-digit number
       message: props => `${props.value} is not a valid phone number!`
     }
   },
@@ -65,9 +65,7 @@ const DriverSchema = new mongoose.Schema({
     trim: true,
     lowercase: true,
     validate: {
-      validator: function(v) {
-        return /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(v);
-      },
+      validator: (v) => /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(v),
       message: props => `${props.value} is not a valid email!`
     }
   },
@@ -76,20 +74,11 @@ const DriverSchema = new mongoose.Schema({
     required: true,
     minlength: 6
   },
-  routes:{
-    
+  routes: {
     type: [RouteSchema],
     required: true
-
   }
 });
 
-module.exports = {
-  Driver: mongoose.model('Driver', DriverSchema),
-  Route: mongoose.model('Route', RouteSchema)
-};
-
-
-
-
-
+// Export the Driver model
+module.exports = mongoose.model('Driver', DriverSchema);

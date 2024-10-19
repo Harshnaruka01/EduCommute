@@ -1,19 +1,20 @@
-//NewDriver.js
 const express = require('express');
-const router = express.Router();
-const { Driver } = require('./Driver_Information.js'); // Import Driver model
-require('dotenv').config();
 const { body, validationResult } = require('express-validator');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const jwtSecret = process.env.JWT_SECRET;
+const Driver = require('./Driver_Information'); // Assuming Driver schema is defined
+require('dotenv').config();
 
+const router = express.Router();
+const jwtSecret = process.env.JWT_SECRET; // Ensure this is in your .env file
+
+// POST route for registering a driver
 router.post('/register/Driver', [
+  // Validation checks
   body('email', 'Enter a valid Email Id').isEmail(),
-  body('DriverName', 'Driver Name must be at least 2 characters long').isLength({ min: 2 }),
-  body('VehicleName', 'Vehicle name is required').not().isEmpty(),
-  body('VehicleNumber', 'Vehicle number is required').not().isEmpty(), 
-  body('vehicleType', 'Vehicle type must be either "bus" or "van"').isIn(['bus', 'van']), 
+  body('driverName', 'Driver Name must be at least 2 characters long').isLength({ min: 2 }),
+  body('vehicleName', 'Vehicle name is required').not().isEmpty(),
+  body('vehicleNumber', 'Vehicle number is required').not().isEmpty(),
   body('password', 'Password must be at least 6 characters long').isLength({ min: 6 }),
   body('confirmPassword', 'Confirm password is required').exists(),
   body('contactNumber', 'Enter a valid 10-digit contact number').isLength({ min: 10, max: 10 }).isNumeric(),
@@ -21,64 +22,64 @@ router.post('/register/Driver', [
   body('routes.*.stops.*.lon', 'Longitude is required for each stop').not().isEmpty(),
   body('routes.*.stops.*.display_name', 'Display name is required for each stop').not().isEmpty(),
 ], async (req, res) => {
+  // Handle validation errors
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
+    console.log("Validation errors:", errors.array());  // Log validation errors
     return res.status(400).json({ errors: errors.array() });
   }
 
-  const { DriverName, email, password, confirmPassword, contactNumber, VehicleName, VehicleNumber, vehicleType, routes } = req.body;
+  const { driverName, email, password, confirmPassword, contactNumber, vehicleName, vehicleNumber, vehicleType, routes } = req.body;
 
   // Check if password and confirmPassword match
   if (password !== confirmPassword) {
-    return res.status(400).json({ success: false, message: "Passwords do not match!" });
+    return res.status(400).json({ message: "Passwords do not match." });
   }
 
   try {
     // Check if the email is already registered
     let existingDriver = await Driver.findOne({ email });
     if (existingDriver) {
-      return res.status(400).json({ success: false, message: 'Email id already exists' });
+      return res.status(400).json({ success: false, message: 'Email already registered.' });
     }
 
-    // Generate salt and hash the password
+    // Hash the password before saving
     const salt = await bcrypt.genSalt(10);
-    let securePassword = await bcrypt.hash(password, salt);
+    const hashedPassword = await bcrypt.hash(password, salt);
 
-    // Create a new Driver entry with the route information
-    const newDriver = new Driver({
-      DriverName,
+    // Create a new driver entry
+    const driver = new Driver({
+      driverName,
       email,
-      password: securePassword,
+      password: hashedPassword, // Store the hashed password
       contactNumber,
-      VehicleName,
-      VehicleNumber,
+      vehicleName,
+      vehicleNumber,
       vehicleType,
-      routes
+      routes // Route details passed from the frontend
     });
 
-    // Save the Driver to the database
-    await newDriver.save();
+    // Save the driver to the database
+    await driver.save();
 
-    res.status(201).json({ success: true, message: 'Driver registered successfully!' });
+    // Send success response
+    return res.status(200).json({ message: "Driver registered successfully!" });
   } catch (error) {
-    console.log(error);
-    res.status(500).json({ success: false, message: 'Server Error' });
+    // Improved error logging
+    console.error("Error in registration:", error.message);
+    if (error.name === 'ValidationError') {
+      return res.status(400).json({ message: 'Validation error occurred', details: error.message });
+    }
+    return res.status(500).json({ message: "Server error" });
   }
 });
 
-
-
-
-
-
-
-
-// Login Driver Route
+// POST route for driver login
 router.post('/login/Driver', [
   body('email', 'Enter a valid Email Id').isEmail(),
-  body('password', 'Enter a valid password').isLength({ min: 6 }),
+  body('password', 'Password is required').exists(),
 ], async (req, res) => {
-  // Check for validation errors
+  // Handle validation errors
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
@@ -87,31 +88,32 @@ router.post('/login/Driver', [
   const { email, password } = req.body;
 
   try {
-    // Check if the email exists in the Driver database
-    let DriverData = await Driver.findOne({ email });
-    if (!DriverData) {
-      return res.status(400).json({ errors: 'Email not found' });
+    // Check if the driver exists with the provided email
+    const driver = await Driver.findOne({ email });
+    if (!driver) {
+      return res.status(400).json({ message: 'Invalid email or password.' });
     }
 
-    // Compare the input password with the hashed password stored in the database
-    const passwordCompare = await bcrypt.compare(password, DriverData.password);
-    if (!passwordCompare) {
-      return res.status(400).json({ errors: 'Incorrect password' });
+    // Compare the entered password with the hashed password in the database
+    const isPasswordValid = await bcrypt.compare(password, driver.password);
+    if (!isPasswordValid) {
+      return res.status(400).json({ message: 'Invalid email or password.' });
     }
 
-    const data = {
-      Driver: {
-        id: DriverData.id,
-      },
+    // Create a JWT payload
+    const payload = {
+      driver: {
+        id: driver.id
+      }
     };
 
-    const authToken = jwt.sign(data, jwtSecret);
-    
-    // Return success response with the auth token
-    return res.json({ success: true, authToken });
+    // Sign the JWT and return the token
+    const token = jwt.sign(payload, jwtSecret, { expiresIn: '1h' });
+
+    return res.json({ success:true});
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({ success: false, message: 'Server Error' });
+    console.error("Error in login:", error.message);
+    return res.status(500).json({ message: "Server error" });
   }
 });
 
