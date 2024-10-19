@@ -1,21 +1,36 @@
-
-
-
 const mongoose = require('mongoose');
 require('dotenv').config();
-
 const mongoURL = process.env.MONGODB_URI
 
-const connectDB = async () => {
+
+mongoose.connect(mongoURL, {
+  dbName: "Institute_Vehicle_Track"
+});
+
+const db = mongoose.connection;
+
+db.on('error', (err) => {
+  console.error('Connection error:', err);
+});
+
+db.once('open', async () => {
+  console.log("DB connected");
+
   try {
-    await mongoose.connect(mongoURL);
-    console.log("DB connected");
+    const data = db.db.collection("drivers");
+    console.log("drivers data collected");
+
+    const result = await data.find({}).toArray();
+
+    if (result) {
+      global.data = result;
+      console.log('All data loaded');
+    } else {
+      console.log('No data found');
+    }
   } catch (err) {
-    console.error('Connection error:', err);
+    console.error('Error fetching data:', err);
   }
-};
+});
 
-
-connectDB();
-
-module.exports = mongoose.connection;
+module.exports = db;
