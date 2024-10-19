@@ -1,37 +1,143 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 
 function InstituteSignup() {
+  const [formData, setFormData] = useState({
+    name: '',
+    instituteType: '',
+    contact: '',
+    email: '',
+    password: '',
+    confirmPassword: ''
+  });
+
+  const [loading, setLoading] = useState(false);  // Manage loading state
+  const navigate = useNavigate();
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);  // Start loading
+
+    if (formData.password !== formData.confirmPassword) {
+      alert("Passwords do not match!");
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const response = await fetch("http://localhost:5000/api/register/Institute", {
+        method: 'POST',
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          InstituteType: formData.instituteType,  // Correct field name for backend
+          contactNumber: formData.contact,  // Correct field name for backend
+          email: formData.email,
+          password: formData.password,
+          confirmPassword: formData.confirmPassword  // Include confirmPassword
+        })
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        alert(errorData.message || "Signup failed. Please try again.");
+        setLoading(false);
+        return;
+      }
+
+      const result = await response.json();
+
+      if (result.success) {
+        alert("Signup successful!");
+        navigate("/institute/interface");  // Redirect after success
+      } else {
+        alert(result.message || "Signup failed. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error during signup:", error);
+      alert("An error occurred. Please try again later.");
+    }
+
+    setLoading(false);
+  };
+
   return (
     <div className="institute-info-container">
       <h1>Institute Information</h1>
-      <form className="institute-info-form">
-        <input type="text" placeholder="Enter your institute name" className="institute-info-input" />
+      <form className="institute-info-form" onSubmit={handleSubmit}>
+        <input
+          type="text"
+          name="name"
+          placeholder="Enter your institute name"
+          value={formData.name}
+          onChange={handleChange}
+          className="institute-info-input"
+          required
+        />
 
-        <select className="institute-info-dropdown">
-          <option value="" disabled selected>Select Institute Type</option>
-          <option value="college">College</option>
-          <option value="school">School</option>
+        <select
+          name="instituteType"
+          value={formData.instituteType}
+          onChange={handleChange}
+          className="institute-info-dropdown"
+          required
+        >
+          <option value="" disabled>Select Institute Type</option>
+          <option value="College">College</option>
+          <option value="School">School</option>
         </select>
 
-        <input type="tel" placeholder="Institute contact number" className="institute-info-input" />
-        <input type="email" placeholder="Email Address" className="institute-info-input" />
-        <input type="password" placeholder="Enter Password" className="institute-info-input" />
-        <input type="password" placeholder="Confirm Password" className="institute-info-input" />
+        <input
+          type="tel"
+          name="contact"
+          placeholder="Institute contact number"
+          value={formData.contact}
+          onChange={handleChange}
+          className="institute-info-input"
+          required
+        />
+        <input
+          type="email"
+          name="email"
+          placeholder="Email Address"
+          value={formData.email}
+          onChange={handleChange}
+          className="institute-info-input"
+          required
+        />
+        <input
+          type="password"
+          name="password"
+          placeholder="Enter Password"
+          value={formData.password}
+          onChange={handleChange}
+          className="institute-info-input"
+          required
+        />
+        <input
+          type="password"
+          name="confirmPassword"
+          placeholder="Confirm Password"
+          value={formData.confirmPassword}
+          onChange={handleChange}
+          className="institute-info-input"
+          required
+        />
 
-        <div className="institute-info-map-container">
-          <h3>Institute Location</h3>
-          <div id="map" className="institute-info-map">
-            <p>Map will be displayed here.</p>
-          </div>
-        </div>
+        <button type="submit" className="institute-info-register-btn" disabled={loading}>
+          {loading ? "Registering..." : "Register"}
+        </button>
+      </form><br />
 
-        <div className="institute-info-upload-container">
-          <button type="button" className="institute-info-upload-btn">Upload Institute logo</button>
-        </div>
-      </form>
-        <Link to='/institute/interface'><button className="institute-info-register-btn">Register</button></Link>
+      <Link to='/'>
+        <button className="institute-info-login-btn">Already have an account? Login</button>
+      </Link>
     </div>
   );
 }

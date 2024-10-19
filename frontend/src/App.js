@@ -24,7 +24,7 @@ function App() {
         <Route path="/institute/interface" element={<InstituteInterface/>}/>
         <Route path="/institute/add-vehicle" element={<AddVehicleInfo/>}/>
         <Route path="/institute/add-vehicle/institution/Addroute" element={<VehicleRoute/>}/>
-        <Route path="/driver/StartRouteButton" element={<StartRouteButton/>}/>
+        <Route path="/Driver/StartRouteButton" element={<StartRouteButton/>}/>
         <Route path="/driver/interface" element={<DriverMap/>}/>
         <Route path="/student/interface" element={<StudentInterface/>}/>
         <Route path="/student/VehicleRoute-10" element={<StudentRoute/>}/>

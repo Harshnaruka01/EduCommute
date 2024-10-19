@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const SignupForm = () => {
   const [formData, setFormData] = useState({
@@ -11,13 +11,60 @@ const SignupForm = () => {
     confirmPassword: ''
   });
 
+  const [loading, setLoading] = useState(false);  // Manage loading state
+  const navigate = useNavigate();
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData);
+    setLoading(true);  // Start loading
+
+    if (formData.password !== formData.confirmPassword) {
+      alert("Passwords do not match!");
+      setLoading(false);  // Stop loading if validation fails
+      return;
+    }
+
+    try {
+      const response = await fetch("http://localhost:5000/api/register/Student", {
+        method: 'POST',
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          CollegeName: formData.college,  // Correct field name for backend
+          contactNumber: formData.contact,  // Correct field name for backend
+          email: formData.email,
+          password: formData.password,
+          confirmPassword: formData.confirmPassword  // Include confirmPassword
+        })
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        alert(errorData.message || "Signup failed. Please try again.");
+        setLoading(false);
+        return;
+      }
+
+      const result = await response.json();
+
+      if (result.success) {
+        alert("Signup successful!");
+        navigate("/student/interface");  // Redirect after success
+      } else {
+        alert(result.message || "Signup failed. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error during signup:", error);
+      alert("An error occurred. Please try again later.");
+    }
+
+    setLoading(false);  // Stop loading after request completes
   };
 
   return (
@@ -31,6 +78,7 @@ const SignupForm = () => {
           value={formData.name}
           onChange={handleChange}
           className="signup-input"
+          required
         />
         <input
           type="text"
@@ -39,6 +87,7 @@ const SignupForm = () => {
           value={formData.college}
           onChange={handleChange}
           className="signup-input"
+          required
         />
         <input
           type="text"
@@ -47,6 +96,7 @@ const SignupForm = () => {
           value={formData.contact}
           onChange={handleChange}
           className="signup-input"
+          required
         />
         <input
           type="email"
@@ -55,6 +105,7 @@ const SignupForm = () => {
           value={formData.email}
           onChange={handleChange}
           className="signup-input"
+          required
         />
         <input
           type="password"
@@ -63,6 +114,7 @@ const SignupForm = () => {
           value={formData.password}
           onChange={handleChange}
           className="signup-input"
+          required
         />
         <input
           type="password"
@@ -71,11 +123,15 @@ const SignupForm = () => {
           value={formData.confirmPassword}
           onChange={handleChange}
           className="signup-input"
+          required
         />
-      </form>
-        <Link to='/student/interface'>
-        <button type="submit" className="signup-button">Submit</button>
-        </Link>
+        <button type="submit" className="signup-button" disabled={loading}>
+          {loading ? "Signing up..." : "Submit"}
+        </button>
+      </form><br />
+      <Link to='/'>
+        <button className="signup-login-button">Already have an account? Login</button>
+      </Link>
     </div>
   );
 };

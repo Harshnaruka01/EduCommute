@@ -26,7 +26,7 @@ const SaveRoute = ({ routePoints }) => {
     
     <Link to='/institute/interface'>
                 <div className="add-vehicle-submit-btn-container" onClick={handleSave} style={{display:'flex',justifyContent:'right', marginRight:'30px'}}>
-                        <input type="submit" value="Save Route" className="add-vehicle-submit-btn" />
+                        <input type="submit" value="Register" className="add-vehicle-submit-btn" />
                 </div>
                 </Link>
     <div>
