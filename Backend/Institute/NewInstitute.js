@@ -60,7 +60,7 @@ router.post('/register/Institute', [
   });
   
 
-  router.post('/login/institute', [
+  router.post('/login/Institute', [
     // Validation middleware
     body('email', 'Enter a valid Email Id').isEmail(),
     body('password', 'Enter a valid password').isLength({ min: 6 }),
