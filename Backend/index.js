@@ -37,7 +37,7 @@ if (process.env.NODE_ENV === 'production') {
 
 app.use(express.json());
 // app.use('/api', require('../Backend/Institute/NewInstitute'));
-// app.use('/api', require('../Backend/Students/NewStudent'));
+app.use('/api', require('./Student/NewStudent'));
 // app.use('/api', require('../Backend/Driver/NewDriver'));
 
 
