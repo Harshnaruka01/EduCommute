@@ -1,6 +1,4 @@
 const mongoose = require('mongoose');
-
-// Define the schema for institute details
 const StudentSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -19,9 +17,9 @@ const StudentSchema = new mongoose.Schema({
     required: true,
     validate: {
       validator: function(v) {
-        return /\d{10}/.test(v); // Validate for a 10-digit phone number
+        return /\d{10}/.test(v); 
       },
-      message: props => `${props.value} is not a valid phone number!` // Fixed template literal
+      message: props => `${props.value} is not a valid phone number!` 
     }
   },
   email: {
@@ -32,9 +30,9 @@ const StudentSchema = new mongoose.Schema({
     lowercase: true,
     validate: {
       validator: function(v) {
-        return /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(v); // Validate email format
+        return /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(v); 
       },
-      message: props => `${props.value} is not a valid email!` // Fixed template literal
+      message: props => `${props.value} is not a valid email!` 
     }
   },
   password: {
@@ -44,5 +42,4 @@ const StudentSchema = new mongoose.Schema({
   }
 });
 
-// Export the model to be used in the controller
 module.exports = mongoose.model('Student', StudentSchema);

@@ -25,7 +25,6 @@ router.post('/register/Student', [
 
   const { name, email, password, confirmPassword, contactNumber, CollegeName } = req.body;
 
-  // Check if password and confirmPassword match
   if (password !== confirmPassword) {
     return res.status(400).json({ success: false, message: "Passwords do not match!" });
   }
@@ -47,10 +46,10 @@ router.post('/register/Student', [
       email,
       password: securePassword,
       contactNumber,
-      CollegeName // Now added to be stored in the database
+      CollegeName 
     });
 
-    // Save the Student to the database
+    // Saving the Student data into the database
     await newStudent.save();
 
     res.status(201).json({ success: true, message: 'Student registered successfully!' });
@@ -59,6 +58,17 @@ router.post('/register/Student', [
     res.status(500).json({ success: false, message: 'Server Error' });
   }
 });
+
+
+
+
+
+
+
+
+
+
+
 
 // Login Student Route
 router.post('/login/Student', [
