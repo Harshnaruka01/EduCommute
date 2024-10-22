@@ -118,4 +118,13 @@
   .register-btn:hover {
     background-color: #5a6268;
   }
-  
+
+  .login-input:focus {
+    background-color: rgb(226, 226, 226); /* or any other color you want */
+    outline: none; 
+    color: black;
+  }
+
+  input:focus::placeholder {
+    color: rgb(0, 0, 0); /* Change placeholder color to black on focus */
+  }

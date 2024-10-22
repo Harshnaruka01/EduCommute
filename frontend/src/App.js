@@ -2,7 +2,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Home from './Components/Home';
-import UserLogin from './Components/Login';
+// import UserLogin from './Components/Login';
 import InstituteSignup from './Institute/InstituteSignup';
 import InstituteInterface from './Institute/InstituteInterface'
 import AddVehicleInfo from './Institute/VehicleInfo';
@@ -18,7 +18,7 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<Home />}/>
-        <Route path="/login" element={<UserLogin />} />
+        {/* <Route path="/login" element={<UserLogin />} /> */}
         <Route path="/register/institute" element={<InstituteSignup/>}/>
         <Route path="/register/student" element={<SignupForm/>}/>
         <Route path="/institute/interface" element={<InstituteInterface/>}/>

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import './RegisterPage.css'; // Assuming you'll create this for the new styles
+import { toast} from 'react-toastify';
 
 function RegisterPage() {
   const [email, setEmail] = useState('');
@@ -34,7 +35,7 @@ function RegisterPage() {
 
       if (!response.ok) {
         const errorData = await response.json();
-        alert(errorData.message || 'Login failed. Please try again.');
+        toast.error(errorData.message || 'Login failed. Please try again.');
         setLoading(false);
         return;
       }
@@ -53,7 +54,7 @@ function RegisterPage() {
           navigate('/Driver/StartRouteButton');
         }
       } else {
-        alert(result.message || 'Login failed. Please try again.');
+        toast.error(result.message || 'Login failed. Please try again.');
       }
     } catch (error) {
       console.error('Error during login:', error);
@@ -69,7 +70,7 @@ function RegisterPage() {
         <div className="login-container">
           <h2>LOGIN</h2>
           <form className="login-form" onSubmit={handleSubmit}>
-            <input
+            <input 
               type="email"
               className="login-input"
               placeholder="Email Address"
