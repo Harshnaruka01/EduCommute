@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { toast} from 'react-toastify';
 
 const SignupForm = () => {
   const [formData, setFormData] = useState({
@@ -23,7 +24,7 @@ const SignupForm = () => {
     setLoading(true);  // Start loading
 
     if (formData.password !== formData.confirmPassword) {
-      alert("Passwords do not match!");
+      toast.error("Passwords do not match!");
       setLoading(false);  // Stop loading if validation fails
       return;
     }
@@ -46,7 +47,7 @@ const SignupForm = () => {
 
       if (!response.ok) {
         const errorData = await response.json();
-        alert(errorData.message || "Signup failed. Please try again.");
+        toast.error(errorData.message || "Signup failed. Please try again.");
         setLoading(false);
         return;
       }
@@ -54,14 +55,14 @@ const SignupForm = () => {
       const result = await response.json();
 
       if (result.success) {
-        alert("Signup successful!");
+        toast("Signup successful!");
         navigate("/student/interface");  // Redirect after success
       } else {
-        alert(result.message || "Signup failed. Please try again.");
+        toast(result.message || "Signup failed. Please try again.");
       }
     } catch (error) {
       console.error("Error during signup:", error);
-      alert("An error occurred. Please try again later.");
+      toast.error("An error occurred. Please try again later.");
     }
 
     setLoading(false);  // Stop loading after request completes

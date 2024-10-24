@@ -120,7 +120,8 @@ h1:hover {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   text-align: center;
   width: 400px;
-  transition: box-shadow 0.3s ease; 
+  transition: box-shadow 0.3s ease;
+  border-radius: 30px;
 }
 
 .institute-info-container:hover {
@@ -133,29 +134,47 @@ h1:hover {
   gap: 20px;
 }
 
+.institute-info-login-btn{
+  color: white;
+}
+
+.institute-info-login-btn1{
+  text-decoration: none;
+}
+
 .institute-info-input {
   padding: 10px;
   font-size: 16px;
   border-radius: 20px;
-  border: 1px solid #ccc;
+  border: 1px solid #000000;
   outline: none;
-  width: 100%;
-  background-color: #ececec;
+  /* width: 100%; */
+  background-color: #333;
   transition: background-color 0.3s ease, transform 0.3s ease; 
+}
+
+.institute-info-input:focus{
+  background-color: white;
+}
+.institute-info-dropdown::placeholder{
+  /* background-color: white; */
+  color: white;
 }
 
 .institute-info-dropdown {
   padding: 10px;
   font-size: 16px;
   border-radius: 20px;
-  border: 1px solid #ccc;
+  border: 1px solid #000000;
   outline: none;
-  width: 105%;
-  background-color: #ececec;
+  /* width: 105%; */
+  background-color: #333;
+  color: rgb(150, 149, 149);
 }
 
-.institute-info-input::placeholder {
-  color: #888;
+.institute-info-dropdown:focus{
+  background-color: white;
+  color: black;
 }
 
 .institute-info-map-container {
@@ -201,7 +220,7 @@ h1:hover {
   padding: 15px;
   font-size: 18px;
   width: 200px;
-  background-color: #333;
+  background-color: #007bff;
   color: white;
   border: none;
   border-radius: 25px;

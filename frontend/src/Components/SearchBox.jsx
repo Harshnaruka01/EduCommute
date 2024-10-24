@@ -9,7 +9,7 @@ const NOMINATIM_BASE_URL = "https://nominatim.openstreetmap.org/search?";
 
 export default function SearchBox(props) {
   const { setRoutePoints } = props;
-  const [searchText, setSearchText] = useState(""); 
+  // const [searchText, setSearchText] = useState(""); 
   const [startingPoint, setStartingPoint] = useState(null); 
   const [stops, setStops] = useState([]); 
   const [endPoint, setEndPoint] = useState(null); 
@@ -78,9 +78,8 @@ export default function SearchBox(props) {
   };
 
   const handleInputChange = (field, value) => {
-    setSearchText(value);
-    handleSearch(value);
-
+    handleSearch(value); // Call search directly with the input value
+  
     if (field === "start") {
       setInputValues({ ...inputValues, start: value });
       setActiveField("start");
@@ -95,6 +94,7 @@ export default function SearchBox(props) {
       setActiveField("end");
     }
   };
+  
 
   return (
     <>

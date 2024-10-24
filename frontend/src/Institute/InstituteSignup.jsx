@@ -134,8 +134,8 @@ function InstituteSignup() {
         </button>
       </form><br />
 
-      <Link to='/'>
-        <button className="institute-info-login-btn">Already have an account? Login</button>
+      <Link to='/' className='institute-info-login-btn1'>
+        <h4 className="institute-info-login-btn">Already have an account? Login</h4>
       </Link>
     </div>
   );
