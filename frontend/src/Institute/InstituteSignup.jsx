@@ -69,7 +69,6 @@ function InstituteSignup() {
 
   return (
     <div className="institute-info-container">
-      <h1>Institute Information</h1>
       <form className="institute-info-form" onSubmit={handleSubmit}>
         <input
           type="text"

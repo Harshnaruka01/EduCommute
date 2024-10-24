@@ -12,9 +12,8 @@ function RegisterPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
-
-    // Determine the API route based on the selected role
+    setLoading(true); // Start loading when the form is submitted
+  
     let apiUrl = '';
     if (role === 'student') {
       apiUrl = 'http://localhost:5000/api/login/Student';
@@ -23,7 +22,7 @@ function RegisterPage() {
     } else if (role === 'driver') {
       apiUrl = 'http://localhost:5000/api/login/Driver';
     }
-
+  
     try {
       const response = await fetch(apiUrl, {
         method: 'POST',
@@ -32,20 +31,22 @@ function RegisterPage() {
         },
         body: JSON.stringify({ email, password }),
       });
-
+  
+      const result = await response.json();
+  
       if (!response.ok) {
-        const errorData = await response.json();
-        toast.error(errorData.message || 'Login failed. Please try again.');
-        setLoading(false);
+        if (result.message === 'Incorrect Password.') {
+          toast.error('Incorrect password. Please try again.');
+        } else if (result.message === 'User not registered') {
+          toast.error('This email is not registered. Please sign up first.');
+        } else {
+          toast.error(result.message || 'Incorrect Password or Email.');
+        }
+        setLoading(false); // Stop loading after handling errors
         return;
       }
-
-      const result = await response.json();
-      console.log('API Result:', result); // Log the API result
-      console.log('Selected role:', role); // Log selected role
-
+  
       if (result.success) {
-        // Redirect based on role after successful login
         if (role === 'student') {
           navigate('/student/interface');
         } else if (role === 'institute') {
@@ -58,11 +59,13 @@ function RegisterPage() {
       }
     } catch (error) {
       console.error('Error during login:', error);
-      alert('An error occurred. Please try again later.');
+      toast.error('An error occurred. Please try again later.');
     }
-
-    setLoading(false);
+  
+    setLoading(false); // Stop loading after login attempt
   };
+  
+  
 
   return (
     <div className="home-container">

@@ -114,7 +114,7 @@ h1:hover {
 }
 
 .institute-info-container {
-  background-color: white;
+  background-color: rgb(0, 0, 0);
   padding: 40px;
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -437,19 +437,30 @@ body {
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); 
 }
 
+.Main-Container{
+  background-color: #ffffff;
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .signup-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100vh;
-  background-color: #f9f9f9;
+  width: 27vw;
+  height: 90vh;
+  background-color: #000000;
+  border-radius: 40px;
 }
 
 .signup-title {
   font-size: 2rem;
   margin-bottom: 20px;
-  color: black;
+  color: white;
   transition: color 0.3s ease;
 }
 
@@ -466,9 +477,9 @@ body {
 .signup-input {
   margin: 10px 0;
   padding: 12px;
-  border-radius: 25px;
+  border-radius: 7px;
   border: none;
-  background-color: #d3d3d3;
+  background-color: #333;
   font-size: 16px;
   text-align: center;
   transition: background-color 0.3s ease, transform 0.3s ease; 
@@ -476,6 +487,7 @@ body {
 
 .signup-input:focus {
   transform: scale(1.02); 
+  background-color: white;
 }
 
 .signup-button {
@@ -483,7 +495,7 @@ body {
   padding: 12px;
   border: none;
   border-radius: 25px;
-  background-color: black;
+  background-color: #007bff;
   color: white;
   font-size: 16px;
   cursor: pointer;
@@ -494,6 +506,14 @@ body {
   background-color: #333;
   transform: translateY(-2px);
 }
+.signup-login-button{
+  color: white;
+}
+
+.signup-login-button1{
+  text-decoration: none;
+}
+
 
 .vehicle-container {
   display: flex;

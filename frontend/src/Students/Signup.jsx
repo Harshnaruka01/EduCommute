@@ -68,6 +68,7 @@ const SignupForm = () => {
   };
 
   return (
+    <div className='Main-Container'>
     <div className="signup-container">
       <h2 className="signup-title">Sign up</h2>
       <form onSubmit={handleSubmit} className="signup-form">
@@ -129,9 +130,10 @@ const SignupForm = () => {
           {loading ? "Signing up..." : "Submit"}
         </button>
       </form><br />
-      <Link to='/'>
-        <button className="signup-login-button">Already have an account? Login</button>
+      <Link to='/' className='signup-login-button1'>
+        <h4 className="signup-login-button">Already have an account? Login</h4>
       </Link>
+    </div>
     </div>
   );
 };
