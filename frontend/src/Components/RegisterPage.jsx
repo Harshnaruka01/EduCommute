@@ -47,6 +47,8 @@ function RegisterPage() {
       }
   
       if (result.success) {
+
+        toast.success("Login Successful")
         if (role === 'student') {
           navigate('/student/interface');
         } else if (role === 'institute') {

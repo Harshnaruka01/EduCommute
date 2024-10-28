@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import { Routes, useNavigate } from 'react-router-dom'; // Import useNavigate
 import SearchBox from "../Components/SearchBox";
 import Maps from "../Components/Maps";
 import Button from '@mui/material/Button';
@@ -15,7 +15,8 @@ const AddVehicleInfo = () => {
         email: "",
         password: "",
         confirmPassword: "",
-        contactNumber: ""
+        contactNumber: "",
+        routes:""
     });
 
     const handleInputChange = (e) => {
@@ -32,25 +33,32 @@ const AddVehicleInfo = () => {
             alert("Passwords do not match!");
             return;
         }
-
+    
+        // Combine form data with route points
         const combinedData = {
             ...formData,
-            routes: routePoints
+            routes: routePoints // Include route points in the form submission
         };
-
+    
         console.log("Submitting Data:", combinedData);
 
+
+
+
+        //All right here
+    
         try {
             const response = await fetch('http://localhost:5000/api/register/Driver', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(combinedData),
+                body: JSON.stringify(combinedData), // Send the combined data to the backend
             });
-
+            // console.log(combinedData)
+    
             const result = await response.json();
-
+    
             if (response.ok) {
                 // Save route points to local storage after successful registration
                 localStorage.setItem('driverRoutes', JSON.stringify(routePoints)); 
@@ -101,7 +109,7 @@ const AddVehicleInfo = () => {
                                 </select>
                             </div>
                             <div className="add-vehicle-group">
-                                <label htmlFor="vehicleNumber" className="add-vehicle-label">Vehicle Number Plate No.</label>
+                                <label htmlFor="vehicleNumber" className="add-vehicle-label">Vehicle Plate No.</label>
                                 <input
                                     type="text"
                                     id="vehicleNumber"
@@ -178,7 +186,7 @@ const AddVehicleInfo = () => {
                             </div>
                         </div>
                         <div className="submit-btn-container">
-                            <Button variant="contained" type="submit" style={{position:'absolute',right:"40px", marginTop:"560px"}}>
+                            <Button type="submit">
                                 Register
                             </Button>
                         </div>
@@ -186,15 +194,17 @@ const AddVehicleInfo = () => {
                 </div>
             </div>
 
-            <div style={{}}>Vehicle Route</div>
+        <div className='Vehicle_route'>
+            <div className='Vehicle_route_label'><h2>Vehicle Route</h2></div>
 
-            <div style={{ display: "flex", flexDirection: "row", width: "100vw", height: "100vh", marginTop: '70px' }}>
-                <div style={{ display: 'flex', flexDirection: 'column', marginLeft: '70px', alignItems: 'center', width: "40vw", height: '590px', boxShadow: '0 1px 6px grey' }}>
+            <div style={{ display: "flex", flexDirection: "row", width: "100vw", height: "100vh", marginTop: '70px' }} className='Vehicle_route_container'>
+                <div style={{ display: 'flex', flexDirection: 'column', marginLeft: '70px', alignItems: 'center', width: "40vw", height: '590px', boxShadow: '0 1px 6px grey' }} className='Vehicle_route_searchBox'>
                     <SearchBox setRoutePoints={setRoutePoints} />
                 </div>
                 <div style={{ width: "50vw", height: "100%" }}>
                     <Maps routePoints={routePoints} />
                 </div>
+            </div>
             </div>
         </>
     );

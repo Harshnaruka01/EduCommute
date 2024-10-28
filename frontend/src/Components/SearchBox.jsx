@@ -4,7 +4,7 @@ import Button from '@mui/material/Button';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
-import SaveRoute from "../Institute/SaveRoute";
+// import SaveRoute from "../Institute/SaveRoute";
 const NOMINATIM_BASE_URL = "https://nominatim.openstreetmap.org/search?";
 
 export default function SearchBox(props) {
@@ -98,24 +98,25 @@ export default function SearchBox(props) {
 
   return (
     <>
-      <div style={{ display: "flex", flexDirection: "column", height: '70vh' }}>
+      <div style={{ display: "flex", flexDirection: "column", height: '70vh'}}>
         <div>
-          <h3>Starting Point</h3>
+          <h3 style={{color:"white"}}>Starting Point</h3>
           <OutlinedInput
-            style={{ width: "100%" }}
+          className="Route-start-point"
             value={inputValues.start}
             placeholder="Search starting point"
             onChange={(e) => handleInputChange("start", e.target.value)}
           />
           {activeField === "start" && searchResults.length > 0 && (
-            <List component="nav">
+            <List component="nav" style={{position:"absolute", zIndex:"1", width:"400px", maxHeight:"400px", overflow:"scroll"}}>
               {searchResults.map((item) => (
                 <ListItem
+                  style={{backgroundColor:"white"}}
                   key={item.place_id}
                   button
                   onClick={() => handleSelectLocation(item)}
                 >
-                  <ListItemText primary={item.display_name} />
+                  <ListItemText primary={item.display_name} style={{ color:"black"}} />
                 </ListItem>
               ))}
             </List>
@@ -123,24 +124,26 @@ export default function SearchBox(props) {
         </div>
 
         <div>
-          <h3>Stops</h3>
+          <h3 style={{color:"white"}}>Stops</h3>
           {stops.map((stop, index) => (
             <div key={index}>
               <OutlinedInput
+              className="Route-start-point"
                 style={{ width: "100%" }}
                 value={inputValues.stops[index] || ""}
                 placeholder={`Stop ${index + 1}`}
                 onChange={(e) => handleInputChange(`stop-${index}`, e.target.value)}
               />
               {activeField === `stop-${index}` && searchResults.length > 0 && (
-                <List component="nav">
+                <List component="nav"  style={{position:"absolute", zIndex:"1", width:"400px", maxHeight:"200px", overflow:"scroll"}}>
                   {searchResults.map((item) => (
                     <ListItem
+                    style={{backgroundColor:"white"}}
                       key={item.place_id}
                       button
                       onClick={() => handleSelectLocation(item)}
                     >
-                      <ListItemText primary={item.display_name} />
+                      <ListItemText primary={item.display_name} style={{ color:"black"}} />
                     </ListItem>
                   ))}
                 </List>
@@ -153,22 +156,23 @@ export default function SearchBox(props) {
         </div>
 
         <div>
-          <h3>End Point</h3>
+          <h3 style={{color:"white"}}>End Point</h3>
           <OutlinedInput
-            style={{ width: "100%" }}
+            className="Route-start-point"
             value={inputValues.end}
             placeholder="Search end point"
             onChange={(e) => handleInputChange("end", e.target.value)}
           />
           {activeField === "end" && searchResults.length > 0 && (
-            <List component="nav">
+            <List component="nav" style={{position:"absolute", zIndex:"1", width:"400px", maxHeight:"100px", overflow:"scroll"}}>
               {searchResults.map((item) => (
                 <ListItem
+                style={{backgroundColor:"white"}}
                   key={item.place_id}
                   button
                   onClick={() => handleSelectLocation(item)}
                 >
-                  <ListItemText primary={item.display_name} />
+                  <ListItemText primary={item.display_name} style={{ color:"black"}} />
                 </ListItem>
               ))}
             </List>
@@ -179,9 +183,6 @@ export default function SearchBox(props) {
           Plot Route
         </Button>
 
-        <div className="submit-btn-container" style={{position:'absolute',right:'10px',marginTop:'630px'}}>
-        <SaveRoute routePoints={[startingPoint, ...stops, endPoint]} />
-      </div>
       </div>
 
       
