@@ -7,7 +7,7 @@ const instituteSchema = new mongoose.Schema({
     required: true,
     trim: true
   },
-  InstituteType: {
+  InstituteType: { 
     type: String,
     enum: ['College', 'School'], 
     required: true

@@ -3,11 +3,11 @@ const mongoose = require('mongoose');
 // Define the Stop schema
 const StopSchema = new mongoose.Schema({
   lat: {
-    type: String, 
+    type: Number, // Changed to Number
     required: true
   },
   lon: {
-    type: String, 
+    type: Number, // Changed to Number
     required: true
   },
   display_name: {
@@ -17,26 +17,14 @@ const StopSchema = new mongoose.Schema({
   }
 });
 
-// Define the Route schema
-const RouteSchema = new mongoose.Schema({
-  stops: {
-    type: [StopSchema], 
-    required: true
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now
-  }
-});
-
 // Define the Driver schema
 const DriverSchema = new mongoose.Schema({
-  vehicleName: {  // Changed to camelCase for consistency
+  vehicleName: {
     type: String,
     required: true,
     trim: true
   },
-  vehicleNumber: {  // Changed to camelCase for consistency
+  vehicleNumber: {
     type: String,
     required: true,
     trim: true
@@ -45,7 +33,7 @@ const DriverSchema = new mongoose.Schema({
     type: String,
     required: false
   },
-  driverName: {  // Changed to camelCase for consistency
+  driverName: {
     type: String,
     required: true,
     trim: true
@@ -65,7 +53,7 @@ const DriverSchema = new mongoose.Schema({
     trim: true,
     lowercase: true,
     validate: {
-      validator: (v) => /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(v),
+      validator: (v) => /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/.test(v),
       message: props => `${props.value} is not a valid email!`
     }
   },
@@ -75,8 +63,7 @@ const DriverSchema = new mongoose.Schema({
     minlength: 6
   },
   routes: {
-    type: [RouteSchema],
-    required: true
+    type: [StopSchema]
   }
 });
 

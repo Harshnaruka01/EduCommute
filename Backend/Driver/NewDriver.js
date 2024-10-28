@@ -2,30 +2,31 @@ const express = require('express');
 const { body, validationResult } = require('express-validator');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const Driver = require('./Driver_Information'); // Assuming Driver schema is defined
+const Driver = require('./Driver_Information');
 require('dotenv').config();
 
 const router = express.Router();
-const jwtSecret = process.env.JWT_SECRET; // Ensure this is in your .env file
+const jwtSecret = process.env.JWT_SECRET;
 
 // POST route for registering a driver
 router.post('/register/Driver', [
-  // Validation checks
-  body('email', 'Enter a valid Email Id').isEmail(),
-  body('driverName', 'Driver Name must be at least 2 characters long').isLength({ min: 2 }),
-  body('vehicleName', 'Vehicle name is required').not().isEmpty(),
-  body('vehicleNumber', 'Vehicle number is required').not().isEmpty(),
-  body('password', 'Password must be at least 6 characters long').isLength({ min: 6 }),
-  body('confirmPassword', 'Confirm password is required').exists(),
-  body('contactNumber', 'Enter a valid 10-digit contact number').isLength({ min: 10, max: 10 }).isNumeric(),
-  body('routes.*.stops.*.lat', 'Latitude is required for each stop').not().isEmpty(),
-  body('routes.*.stops.*.lon', 'Longitude is required for each stop').not().isEmpty(),
-  body('routes.*.stops.*.display_name', 'Display name is required for each stop').not().isEmpty(),
+  body('email').isEmail().withMessage('Enter a valid Email Id'),
+  body('driverName').isLength({ min: 2 }).withMessage('Driver Name must be at least 2 characters long'),
+  body('vehicleName').not().isEmpty().withMessage('Vehicle name is required'),
+  body('vehicleNumber').not().isEmpty().withMessage('Vehicle number is required'),
+  body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters long'),
+  body('confirmPassword').exists().withMessage('Confirm password is required'),
+  body('contactNumber').isLength({ min: 10, max: 10 }).isNumeric().withMessage('Enter a valid 10-digit contact number'),
+  body('routes').isArray({ min: 1 }).withMessage('Routes must be an array with at least one route'),
+  // Uncomment and adjust the validation for routes and stops as needed
+  // body('routes.*.stops').isArray({ min: 1 }).withMessage('Each route must contain stops'),
+  // body('routes.*.stops.*.lat').not().isEmpty().withMessage('Latitude is required for each stop'),
+  // body('routes.*.stops.*.lon').not().isEmpty().withMessage('Longitude is required for each stop'),
+  // body('routes.*.stops.*.display_name').not().isEmpty().withMessage('Display name is required for each stop')
 ], async (req, res) => {
-  // Handle validation errors
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    console.log("Validation errors:", errors.array());  // Log validation errors
+    console.log("Validation errors:", errors.array());
     return res.status(400).json({ errors: errors.array() });
   }
 
@@ -51,12 +52,12 @@ router.post('/register/Driver', [
     const driver = new Driver({
       driverName,
       email,
-      password: hashedPassword, // Store the hashed password
+      password: hashedPassword,
       contactNumber,
       vehicleName,
       vehicleNumber,
       vehicleType,
-      routes // Route details passed from the frontend
+      routes
     });
 
     // Save the driver to the database
@@ -65,21 +66,18 @@ router.post('/register/Driver', [
     // Send success response
     return res.status(200).json({ message: "Driver registered successfully!" });
   } catch (error) {
-    // Improved error logging
-    console.error("Error in registration:", error.message);
+    console.error("Error in registration:", error);
     if (error.name === 'ValidationError') {
       return res.status(400).json({ message: 'Validation error occurred', details: error.message });
     }
     return res.status(500).json({ message: "Server error" });
   }
 });
-
-// POST route for driver login
+// POST route for logging in a driver
 router.post('/login/Driver', [
   body('email', 'Enter a valid Email Id').isEmail(),
-  body('password', 'Password is required').exists(),
+  body('password', 'Enter a valid password').isLength({ min: 6 }),
 ], async (req, res) => {
-  // Handle validation errors
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
@@ -88,33 +86,29 @@ router.post('/login/Driver', [
   const { email, password } = req.body;
 
   try {
-    // Check if the driver exists with the provided email
-    const driver = await Driver.findOne({ email });
-    if (!driver) {
-      return res.status(400).json({ message: 'Invalid email or password.' });
+    let driverData = await Driver.findOne({ email });
+    if (!driverData) {
+      return res.status(400).json({ errors: 'Email not found' });
     }
 
-    // Compare the entered password with the hashed password in the database
-    const isPasswordValid = await bcrypt.compare(password, driver.password);
-    if (!isPasswordValid) {
-      return res.status(400).json({ message: 'Invalid email or password.' });
+    const passwordCompare = await bcrypt.compare(password, driverData.password);
+    if (!passwordCompare) {
+      return res.status(400).json({ errors: 'Incorrect password' });
     }
 
-    // Create a JWT payload
-    const payload = {
+    const data = {
       driver: {
-        id: driver.id
-      }
+        id: driverData.id,
+      },
     };
 
-    // Sign the JWT and return the token
-    const token = jwt.sign(payload, jwtSecret, { expiresIn: '1h' });
-
-    return res.json({ success:true});
+    const authToken = jwt.sign(data, jwtSecret);
+    return res.json({ success: true, authToken });
   } catch (error) {
-    console.error("Error in login:", error.message);
-    return res.status(500).json({ message: "Server error" });
+    console.error("Error in driver login:", error);
+    return res.status(500).json({ success: false, message: 'Server Error' });
   }
 });
+
 
 module.exports = router;
