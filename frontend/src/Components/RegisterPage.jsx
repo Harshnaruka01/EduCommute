@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import './RegisterPage.css'; // Assuming you'll create this for the new styles
-import { toast} from 'react-toastify';
+import './RegisterPage.css';
+import { toast } from 'react-toastify';
 
 function RegisterPage() {
   const [email, setEmail] = useState('');
@@ -10,9 +10,25 @@ function RegisterPage() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
+  // Redirect to dashboard if already authenticated
+  useEffect(() => {
+    const token = localStorage.getItem('authToken');
+    if (token) {
+      // Redirect based on role if token exists
+      if (role === 'student') {
+        navigate('/student/interface');
+      } else if (role === 'institute') {
+        navigate('/institute/interface');
+      } else if (role === 'driver') {
+        navigate('/Driver/StartRouteButton');
+      }
+    }
+
+  }, [navigate, role]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true); // Start loading when the form is submitted
+    setLoading(true);
   
     let apiUrl = '';
     if (role === 'student') {
@@ -42,13 +58,16 @@ function RegisterPage() {
         } else {
           toast.error(result.message || 'Incorrect Password or Email.');
         }
-        setLoading(false); // Stop loading after handling errors
+        setLoading(false);
         return;
       }
   
-      if (result.success) {
+      if (result.success && result.authToken) {
+        localStorage.setItem('authToken', result.token); // Save token in local storage
+        localStorage.setItem('role', role);
+        toast.success("Login Successful");
 
-        toast.success("Login Successful")
+        // Redirect based on role
         if (role === 'student') {
           navigate('/student/interface');
         } else if (role === 'institute') {
@@ -64,11 +83,9 @@ function RegisterPage() {
       toast.error('An error occurred. Please try again later.');
     }
   
-    setLoading(false); // Stop loading after login attempt
+    setLoading(false);
   };
   
-  
-
   return (
     <div className="home-container">
       <div className="right-section">

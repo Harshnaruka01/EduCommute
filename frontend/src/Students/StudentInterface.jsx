@@ -1,8 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import LogoutBtn from '../Components/LogoutBtn';
 
 const StudentInterface = () => {
   return (
+    <>
     <div className="vehicle-container">
       <h2 className="vehicle-title">Vehicle number:-</h2>
       <div className="vehicle-buttons">
@@ -12,6 +14,9 @@ const StudentInterface = () => {
         <button className="vehicle-button">11</button>
       </div>
     </div>
+
+    <LogoutBtn/>
+    </>
   );
 };
 

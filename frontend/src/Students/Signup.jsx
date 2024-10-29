@@ -55,8 +55,8 @@ const SignupForm = () => {
       const result = await response.json();
 
       if (result.success) {
-        toast("Signup successful!");
-        navigate("/student/interface");  // Redirect after success
+        toast("Signup successful, Please login!");
+        navigate("/");  // Redirect after success
       } else {
         toast(result.message || "Signup failed. Please try again.");
       }

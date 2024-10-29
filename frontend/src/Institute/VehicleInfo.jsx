@@ -63,8 +63,8 @@ const AddVehicleInfo = () => {
                 // Save route points to local storage after successful registration
                 localStorage.setItem('driverRoutes', JSON.stringify(routePoints)); 
                 console.log("Saved route points to local storage:", routePoints);
-                alert("Driver registered successfully!");
-                navigate('/institute/interface'); // Navigate to the desired route
+                alert("Driver registered successfully, Please login!");
+                navigate('/'); // Navigate to the desired route
             } else {
                 alert(`Error: ${result.message}`);
             }

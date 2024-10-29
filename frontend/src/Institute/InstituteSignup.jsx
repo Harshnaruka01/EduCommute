@@ -55,8 +55,8 @@ function InstituteSignup() {
       const result = await response.json();
 
       if (result.success) {
-      toast.success("Signup successful!");
-        navigate("/institute/interface");  // Redirect after success
+      toast.success("Signup successful, please login!");
+        navigate("/");  // Redirect after success
       } else {
       toast.error(result.message || "Signup failed. Please try again.");
       }
