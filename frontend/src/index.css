@@ -623,3 +623,6 @@ body {
   border-style: none;
   border-radius: 20px;
 }
+.Logout-btn:hover{
+  background-color: rgb(207, 35, 35);
+}

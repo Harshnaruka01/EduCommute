@@ -5,11 +5,11 @@ import Maps from "../Components/Maps";
 import Button from '@mui/material/Button';
 
 const AddVehicleInfo = () => {
-    const navigate = useNavigate(); // Initialize navigate
+    const navigate = useNavigate(); 
     const [routePoints, setRoutePoints] = useState([]);
     const [formData, setFormData] = useState({
         vehicleName: "",
-        vehicleType: "bus", // Ensure it matches your schema
+        vehicleType: "bus", 
         vehicleNumber: "",
         driverName: "",
         email: "",
@@ -64,7 +64,7 @@ const AddVehicleInfo = () => {
                 localStorage.setItem('driverRoutes', JSON.stringify(routePoints)); 
                 console.log("Saved route points to local storage:", routePoints);
                 alert("Driver registered successfully, Please login!");
-                navigate('/'); // Navigate to the desired route
+                navigate('/institute/interface'); // Navigate to the desired route
             } else {
                 alert(`Error: ${result.message}`);
             }
