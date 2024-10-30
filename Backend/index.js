@@ -35,7 +35,7 @@ app.use(express.json());
 app.use('/api', require('./Institute/NewInstitute'));
 app.use('/api', require('./Student/NewStudent'));
 app.use('/api', require('./Driver/NewDriver'));
-
+app.use('/api', require('./Driver/DisplayData'));
 
 const server = app.listen(port, () => {
   console.log(`listening to the port ${port}`);

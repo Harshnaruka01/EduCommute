@@ -18,12 +18,13 @@ db.once('open', async () => {
 
   try {
     const data = db.db.collection("drivers");
-    console.log("drivers data collected");
+    console.log("drivers data collected");  
 
     const result = await data.find({}).toArray();
-
+    // console.log(result)
     if (result) {
       global.data = result;
+      // console.log(global.data)
       console.log('All data loaded');
     } else {
       console.log('No data found');

@@ -5,6 +5,7 @@ router.post("/Data",(req,res)=>{
 
     try { 
         res.send([global.data])
+        // console.log(global.data)
     } catch (error) {
         console.error(error.message)
         res.send("server error")
