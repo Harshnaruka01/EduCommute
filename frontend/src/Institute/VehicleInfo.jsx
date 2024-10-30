@@ -40,7 +40,7 @@ const AddVehicleInfo = () => {
             routes: routePoints // Include route points in the form submission
         };
     
-        console.log("Submitting Data:", combinedData);
+        // console.log("Submitting Data:", combinedData);
 
 
 
@@ -62,7 +62,7 @@ const AddVehicleInfo = () => {
             if (response.ok) {
                 // Save route points to local storage after successful registration
                 localStorage.setItem('driverRoutes', JSON.stringify(routePoints)); 
-                console.log("Saved route points to local storage:", routePoints);
+                // console.log("Saved route points to local storage:", routePoints);
                 alert("Driver registered successfully, Please login!");
                 navigate('/institute/interface'); // Navigate to the desired route
             } else {

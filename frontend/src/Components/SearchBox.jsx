@@ -33,7 +33,7 @@ export default function SearchBox(props) {
     fetch(`${NOMINATIM_BASE_URL}${queryString}`)
       .then((response) => response.json())
       .then((result) => {
-         console.log("Search results:", result); 
+        //  console.log("Search results:", result); 
         setSearchResults(result);
       })
       .catch((err) => console.log("Error: ", err));
@@ -73,7 +73,7 @@ export default function SearchBox(props) {
 
   const handleRouteSubmit = () => {
     const routePoints = [startingPoint, ...stops, endPoint].filter(Boolean);
-    console.log("Route points:", routePoints); 
+    // console.log("Route points:", routePoints); 
     setRoutePoints(routePoints); 
   };
 
