@@ -36,17 +36,26 @@ const StudentInterface = () => {
   return (
     <>
       <div className="vehicle-container">
-        <h2 className="vehicle-title">Vehicle number:</h2>
-        <div className="vehicle-buttons">
+        <h2 className="vehicle-title">Vehicle's Name:-</h2>
+        <div className="vehicle-btn-container">
           {loading ? (
             <p>Loading...</p>
           ) : (
-            vehicles.map((vehicle) => (
-              <Link key={vehicle._id} to={`/student/VehicleRoute-${vehicle.vehicleName}`}>
-                <button className="vehicle-button">
-                  {vehicle.vehicleName} 
-                </button>
-              </Link>
+            vehicles.reduce((rows, vehicle, index) => {
+              const rowIndex = Math.floor(index / 4); // Divide buttons into groups of 4
+              if (!rows[rowIndex]) {
+                rows[rowIndex] = []; // Start a new row
+              }
+              rows[rowIndex].push(
+                <Link key={vehicle._id} to={`/student/VehicleRoute-${vehicle.vehicleName}`}>
+                  <button className="vehicle-button">{vehicle.vehicleName}</button>
+                </Link>
+              );
+              return rows;
+            }, []).map((row, rowIndex) => (
+              <div className="vehicle-buttons" key={rowIndex}>
+                {row}
+              </div>
             ))
           )}
         </div>
@@ -54,6 +63,7 @@ const StudentInterface = () => {
       <LogoutBtn />
     </>
   );
+  
 };
 
 export default StudentInterface;

@@ -8,21 +8,33 @@ const RoutingComponent = ({ routePoints }) => {
   const routingControlRef = useRef(null);
 
   useEffect(() => {
+    // Check for valid route points
+    if (routePoints.length < 2) {
+      if (routingControlRef.current) {
+        map.removeControl(routingControlRef.current);
+        routingControlRef.current = null; // Reset the ref
+      }
+      return; // Exit if there are not enough points to create a route
+    }
+
+    // If a routing control already exists, remove it
     if (routingControlRef.current) {
-      // Remove existing routing control if it exists
       map.removeControl(routingControlRef.current);
     }
 
-    if (routePoints.length > 0) {
-      // Create new routing control
-      routingControlRef.current = L.Routing.control({
-        waypoints: routePoints.map(point => L.latLng(point.lat, point.lon)),
-        routeWhileDragging: true,
-        geocoder: L.Control.Geocoder.nominatim(),
-      }).addTo(map);
-    }
+    // Create new routing control
+    routingControlRef.current = L.Routing.control({
+      waypoints: routePoints.map(point => L.latLng(point.lat, point.lon)),
+      routeWhileDragging: false, // Disable route updating while dragging
+      createMarker: () => null, // Disable marker creation
+      show: false, // Hide the routing box
+      geocoder: L.Control.Geocoder.nominatim(), // Optional: Geocoder
+    }).addTo(map);
 
     // Cleanup on unmount or when routePoints change
+    // console.log("Route Points:", routePoints);
+// console.log("Current Routing Control:", routingControlRef.current);
+
     return () => {
       if (routingControlRef.current) {
         map.removeControl(routingControlRef.current);

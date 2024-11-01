@@ -13,18 +13,19 @@ function RegisterPage() {
   // Redirect to dashboard if already authenticated
   useEffect(() => {
     const token = localStorage.getItem('authToken');
-    if (token) {
-      // Redirect based on role if token exists
-      if (role === 'student') {
+    const savedRole = localStorage.getItem('role');
+    
+    if (token && savedRole) {
+      // Redirect based on stored role
+      if (savedRole === 'student') {
         navigate('/student/interface');
-      } else if (role === 'institute') {
+      } else if (savedRole === 'institute') {
         navigate('/institute/interface');
-      } else if (role === 'driver') {
+      } else if (savedRole === 'driver') {
         navigate('/Driver/StartRouteButton');
       }
     }
-
-  }, [navigate, role]);
+  }, [navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -51,22 +52,19 @@ function RegisterPage() {
       const result = await response.json();
   
       if (!response.ok) {
-        if (result.message === 'Incorrect Password.') {
-          toast.error('Incorrect password. Please try again.');
-        } else if (result.message === 'User not registered') {
-          toast.error('This email is not registered. Please sign up first.');
-        } else {
-          toast.error(result.message || 'Incorrect Password or Email.');
-        }
+        toast.error(result.message || 'Login failed. Please try again.');
         setLoading(false);
         return;
       }
   
       if (result.success && result.authToken) {
-        localStorage.setItem('authToken', result.token); // Save token in local storage
+        // Save the token and email in localStorage
+        localStorage.setItem('authToken', result.authToken); 
+        localStorage.setItem('email', email);  // Save email here
         localStorage.setItem('role', role);
+  
         toast.success("Login Successful");
-
+  
         // Redirect based on role
         if (role === 'student') {
           navigate('/student/interface');
@@ -85,6 +83,7 @@ function RegisterPage() {
   
     setLoading(false);
   };
+  
   
   return (
     <div className="home-container">
@@ -126,7 +125,7 @@ function RegisterPage() {
           </form>
           <p>Don't have an account?</p>
           <div className="register-buttons">
-            <Link to="/register/student" className="register-btn">Register as students</Link>
+            <Link to="/register/student" className="register-btn">Register as Student</Link>
             <Link to="/register/institute" className="register-btn">Register as Institute</Link>
           </div>
         </div>

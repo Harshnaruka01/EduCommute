@@ -8,6 +8,7 @@ function LogoutBtn() {
     // Remove the token and role from local storage
     localStorage.removeItem('authToken');
     localStorage.removeItem('role'); // Assuming you stored the role in local storage
+    localStorage.removeItem('email'); // Assuming you stored the email in local storage
 
     // Optionally, navigate the user to the login page or home page after logout
     navigate('/');
