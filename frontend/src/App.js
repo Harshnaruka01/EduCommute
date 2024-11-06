@@ -1,42 +1,27 @@
-
-  import React from 'react';
-  import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-  import Home from './Components/Home';
-  // import UserLogin from './Components/Login';
-  import InstituteSignup from './Institute/InstituteSignup';
-  import InstituteInterface from './Institute/InstituteInterface'
-  import AddVehicleInfo from './Institute/VehicleInfo';
-  // import VehicleRoute from './Institute/VehicleRoute';
-  import DriverInterface from './Driver/DriverInterface';
-  import StartRouteButton from './Driver/StartRouteButton';
-  import SignupForm from './Students/Signup';
-  import StudentInterface from './Students/StudentInterface';
-  import StudentRoute from './Students/StudentRoute';
-  import ProtectedRoute from './Components/ProtectedRoute';
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Home from './Components/Home';
+import InstituteSignup from './Institute/InstituteSignup';
+import InstituteInterface from './Institute/InstituteInterface';
+import AddVehicleInfo from './Institute/VehicleInfo';
+import DriverInterface from './Driver/DriverInterface';
+import StartRouteButton from './Driver/StartRouteButton';
+import SignupForm from './Students/Signup';
+import StudentInterface from './Students/StudentInterface';
+import ProtectedRoute from './Components/ProtectedRoute';
 import NotAuthorized from './Components/NotAuthorized';
+import VehicleInterface from './Students/VehicleInterface';
+import SeeVehicle from './Institute/SeeVehicle';
 
-  function App() {
-    return (
-      <Router>
-        <Routes>
-          <Route path="/" element={<Home />}/>
-          {/* <Route path="/login" element={<UserLogin />} /> */}
-          <Route path="/register/institute" element={<InstituteSignup/>}/>
-          <Route path="/register/student" element={<SignupForm/>}/>
-          <Route path="/not-authorized" element={<NotAuthorized/>}/>
-          {/* <Route path="/institute/interface" element={<InstituteInterface/>}/>
-          <Route path="/institute/add-vehicle" element={<AddVehicleInfo/>}/>
-          <Route path="/institute/add-vehicle/institution/Addroute" element={<VehicleRoute/>}/>
-          <Route path="/Driver/StartRouteButton" element={<StartRouteButton/>}/>
-          <Route path="/driver/interface" element={<DriverInterface/>}/>
-          <Route path="/student/interface" element={<StudentInterface/>}/>
-          <Route path="/student/VehicleRoute-10" element={<StudentRoute/>}/> */}
-
-          {/* Protected routes */}
-          <Route path="/" element={<Home />} />
-        {/* <Route path="/login" element={<UserLogin />} /> */}
+function App() {
+  return (
+    <Router>
+      <Routes>
+        {/* Public routes */}
+        <Route path="/" element={<Home />} />
         <Route path="/register/institute" element={<InstituteSignup />} />
         <Route path="/register/student" element={<SignupForm />} />
+        <Route path="/not-authorized" element={<NotAuthorized />} />
 
         {/* Protected routes */}
         <Route
@@ -48,18 +33,18 @@ import NotAuthorized from './Components/NotAuthorized';
           }
         />
         <Route
-          path="/institute/interface"
+          path="/student/VehicleRoute/:vehicleName"
           element={
-            <ProtectedRoute allowedRoles={['institute']}>
-              <InstituteInterface />
+            <ProtectedRoute allowedRoles={['student']}>
+              <VehicleInterface />
             </ProtectedRoute>
           }
         />
         <Route
-          path="/Driver/StartRouteButton"
+          path="/institute/interface"
           element={
-            <ProtectedRoute allowedRoles={['driver']}>
-              <StartRouteButton />
+            <ProtectedRoute allowedRoles={['institute']}>
+              <InstituteInterface />
             </ProtectedRoute>
           }
         />
@@ -80,16 +65,24 @@ import NotAuthorized from './Components/NotAuthorized';
           }
         />
         <Route
-          path="/student/VehicleRoute-10"
+          path="/Driver/StartRouteButton"
           element={
-            <ProtectedRoute allowedRoles={['student']}>
-              <StudentRoute />
+            <ProtectedRoute allowedRoles={['driver']}>
+              <StartRouteButton />
             </ProtectedRoute>
           }
         />
-        </Routes>
-      </Router>
-    );
-  }
+        <Route
+          path="/institute/see-vehicles"
+          element={
+            <ProtectedRoute allowedRoles={['institute']}>
+              <SeeVehicle />
+            </ProtectedRoute>
+          }
+        />
+      </Routes>
+    </Router>
+  );
+}
 
-  export default App;
+export default App;

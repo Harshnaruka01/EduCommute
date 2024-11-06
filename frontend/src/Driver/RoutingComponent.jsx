@@ -1,49 +1,50 @@
 import { useEffect, useRef } from 'react';
 import { useMap } from 'react-leaflet';
 import L from 'leaflet';
-import 'leaflet-routing-machine'; // Import Leaflet Routing Machine
+import 'leaflet-routing-machine';
 
 const RoutingComponent = ({ routePoints }) => {
   const map = useMap();
   const routingControlRef = useRef(null);
 
   useEffect(() => {
-    // Check for valid route points
-    if (routePoints.length < 2) {
-      if (routingControlRef.current) {
-        map.removeControl(routingControlRef.current);
-        routingControlRef.current = null; // Reset the ref
-      }
-      return; // Exit if there are not enough points to create a route
-    }
-
-    // If a routing control already exists, remove it
+    // Remove existing control if already added
     if (routingControlRef.current) {
-      map.removeControl(routingControlRef.current);
+      try {
+        routingControlRef.current.getPlan().setWaypoints([]); // Clear waypoints
+        map.removeControl(routingControlRef.current); // Remove the control
+      } catch (error) {
+        console.warn('Failed to clear existing routing control:', error);
+      }
+      routingControlRef.current = null; // Reset the ref after removal
     }
 
-    // Create new routing control
-    routingControlRef.current = L.Routing.control({
-      waypoints: routePoints.map(point => L.latLng(point.lat, point.lon)),
-      routeWhileDragging: false, // Disable route updating while dragging
-      createMarker: () => null, // Disable marker creation
-      show: false, // Hide the routing box
-      geocoder: L.Control.Geocoder.nominatim(), // Optional: Geocoder
-    }).addTo(map);
+    // Create and add new routing control if there are enough route points
+    if (routePoints.length >= 2) {
+      routingControlRef.current = L.Routing.control({
+        waypoints: routePoints.map(point => L.latLng(point.lat, point.lon)),
+        routeWhileDragging: false, // Disable route updating while dragging
+        createMarker: () => null, // Disable default marker creation
+        show: false, // Hide the routing instructions box
+        geocoder: L.Control.Geocoder.nominatim(), // Optional: Geocoder
+      }).addTo(map);
+    }
 
-    // Cleanup on unmount or when routePoints change
-    // console.log("Route Points:", routePoints);
-// console.log("Current Routing Control:", routingControlRef.current);
-
+    // Cleanup function to run when the component unmounts or routePoints change
     return () => {
       if (routingControlRef.current) {
-        map.removeControl(routingControlRef.current);
-        routingControlRef.current = null; // Reset the ref
+        try {
+          routingControlRef.current.getPlan().setWaypoints([]); // Clear waypoints
+          map.removeControl(routingControlRef.current); // Remove control from the map
+          routingControlRef.current = null; // Reset ref to prevent future issues
+        } catch (error) {
+          console.warn('Cleanup failed:', error);
+        }
       }
     };
   }, [routePoints, map]);
 
-  return null; // This component doesn't render anything
+  return null; // This component doesn’t render any visible elements
 };
 
 export default RoutingComponent;

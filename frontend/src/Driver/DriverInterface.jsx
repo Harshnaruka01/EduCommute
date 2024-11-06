@@ -51,6 +51,8 @@ const DriverInterface = () => {
       (position) => {
         const { latitude, longitude } = position.coords;
         setDriverPosition([latitude, longitude]);
+        // Store the driver's position in localStorage
+        localStorage.setItem('driverPosition', JSON.stringify([latitude, longitude]));
       },
       (error) => {
         console.error('Error getting driver position:', error);
@@ -60,7 +62,6 @@ const DriverInterface = () => {
 
     return () => navigator.geolocation.clearWatch(watchId);
   }, []);
-
 
   return (
     <div style={{ height: '100vh', width: '100vh' }}>
@@ -75,7 +76,7 @@ const DriverInterface = () => {
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
           />
-          
+
           {driverPosition && (
             <Marker position={driverPosition} icon={dotIcon} />
           )}
